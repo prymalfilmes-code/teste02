@@ -3,23 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instalação AR - Versão Final</title>
+    <title>Instalação AR - Versão Estável Final</title>
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
     
     <style>
-        /* CSS para ocupar a tela inteira */
+        /* Estilos CSS */
         body, html { 
-            margin: 0; 
-            padding: 0; 
-            width: 100%; 
-            height: 100%; 
-            overflow: hidden; 
+            margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; 
         }
         model-viewer { 
-            width: 100vw; 
-            height: 100vh; 
-            background-color: #f0f0f0; 
+            width: 100vw; height: 100vh; background-color: #f0f0f0; 
         }
         .ar-button-style {
             background-color: #FF6600; 
@@ -33,12 +27,14 @@
             bottom: 30px; 
             left: 50%; 
             transform: translateX(-50%);
+            z-index: 10; /* Garante que o botão esteja acima do modelo */
         }
     </style>
 </head>
 <body>
 
     <model-viewer 
+        id="ar-model"
         src="./logo02.glb"
         ios-src="./logo01.usdz" 
         alt="Obra de Arte AR" 
@@ -53,6 +49,43 @@
         </button>
 
     </model-viewer>
+
+    <a id="fallback-ar-button" 
+        style="display:none; position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);" 
+        href="intent://arvr.google.com/scene-viewer/1.0?file=https://prymalfilmes-code.github.io/teste02/logo02.glb&mode=ar#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=https://prymalfilmes-code.github.io/teste02/;end;">
+        <button class="ar-button-style">
+            Ver em RA (Contingência)
+        </button>
+    </a>
+
+    <script>
+        const mv = document.getElementById('ar-model');
+        const fallbackButton = document.getElementById('fallback-ar-button');
+
+        // Esta função verifica se o modo AR nativo está disponível
+        mv.addEventListener('ar-status', (event) => {
+            // A verificação é se o status não está 'initial' (carregando)
+            if (event.detail.status !== 'initial') {
+                const canActivate = mv.canActivateAR || event.detail.status === 'success';
+
+                if (!canActivate) {
+                    // Se a detecção falhar, mostramos o botão de contingência
+                    fallbackButton.style.display = 'block';
+                } else {
+                    // Se o AR estiver funcionando, escondemos a contingência.
+                    fallbackButton.style.display = 'none';
+                }
+            }
+        });
+        
+        // Timeout de segurança para caso o evento 'ar-status' nunca dispare (problema de firmware)
+        setTimeout(() => {
+             // Só mostramos o fallback se o botão nativo estiver escondido (slot="ar-button" não aparecer)
+             if (mv.canActivateAR === undefined || !mv.canActivateAR) {
+                 fallbackButton.style.display = 'block';
+             }
+        }, 3000);
+    </script>
 
 </body>
 </html>
