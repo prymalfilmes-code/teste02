@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instalação AR - GitHub Pages</title>
+    <title>Instalação AR - Versão Final</title>
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
     
@@ -21,6 +21,19 @@
             height: 100vh; 
             background-color: #f0f0f0; 
         }
+        .ar-button-style {
+            background-color: #FF6600; 
+            color: white; 
+            border-radius: 20px; 
+            border: none; 
+            padding: 10px 20px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            position: absolute; 
+            bottom: 30px; 
+            left: 50%; 
+            transform: translateX(-50%);
+        }
     </style>
 </head>
 <body>
@@ -30,12 +43,12 @@
         ios-src="./logo01.usdz" 
         alt="Obra de Arte AR" 
         ar 
-        ar-modes="scene-viewer quick-look" 
+        ar-modes="webxr scene-viewer quick-look" 
         camera-controls 
         auto-rotate
         shadow-intensity="1">
 
-        <button slot="ar-button" style="background-color: #FF6600; color: white; border-radius: 20px; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);">
+        <button slot="ar-button" class="ar-button-style">
           Ver em Realidade Aumentada
         </button>
 
